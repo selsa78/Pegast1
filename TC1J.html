@@ -1,0 +1,86 @@
+package com.example.tests;
+
+import java.util.regex.Pattern;
+import java.util.concurrent.TimeUnit;
+import org.junit.*;
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+import org.openqa.selenium.*;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
+
+public class TC1J {
+  private WebDriver driver;
+  private String baseUrl;
+  private boolean acceptNextAlert = true;
+  private StringBuffer verificationErrors = new StringBuffer();
+
+  @Before
+  public void setUp() throws Exception {
+    driver = new FirefoxDriver();
+    baseUrl = "https://pegast.ru/";
+    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+  }
+
+  @Test
+  public void testTC1J() throws Exception {
+    driver.get(baseUrl + "/");
+    driver.findElement(By.id("primaryMenuBooking")).click();
+    driver.findElement(By.linkText("Туры")).click();
+    new Select(driver.findElement(By.name("package"))).selectByVisibleText("Antalya (Moscow)");
+    driver.findElement(By.cssSelector("span.ui-dropdownchecklist-text")).click();
+    driver.findElement(By.id("ddcl-5-i0")).click();
+    driver.findElement(By.id("ddcl-5-i1")).click();
+    driver.findElement(By.id("ddcl-5-i2")).click();
+    driver.findElement(By.id("ddcl-5-i3")).click();
+    driver.findElement(By.xpath("//div[@id='content_wrapper']/div/form/div[2]/div[2]/div[3]/div")).click();
+    new Select(driver.findElement(By.xpath("//div[@id='content_wrapper']/div/form/div[2]/div[2]/div[2]/div[2]/select"))).selectByVisibleText("7");
+    new Select(driver.findElement(By.xpath("//div[@id='content_wrapper']/div/form/div[2]/div[2]/div[2]/div[2]/select[2]"))).selectByVisibleText("10");
+    new Select(driver.findElement(By.name("childNumber"))).selectByVisibleText("2");
+    driver.findElement(By.name("childAge[]")).clear();
+    driver.findElement(By.name("childAge[]")).sendKeys("5");
+    driver.findElement(By.cssSelector("input.main-button.pegasys_search_button")).click();
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    driver.quit();
+    String verificationErrorString = verificationErrors.toString();
+    if (!"".equals(verificationErrorString)) {
+      fail(verificationErrorString);
+    }
+  }
+
+  private boolean isElementPresent(By by) {
+    try {
+      driver.findElement(by);
+      return true;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+  }
+
+  private boolean isAlertPresent() {
+    try {
+      driver.switchTo().alert();
+      return true;
+    } catch (NoAlertPresentException e) {
+      return false;
+    }
+  }
+
+  private String closeAlertAndGetItsText() {
+    try {
+      Alert alert = driver.switchTo().alert();
+      String alertText = alert.getText();
+      if (acceptNextAlert) {
+        alert.accept();
+      } else {
+        alert.dismiss();
+      }
+      return alertText;
+    } finally {
+      acceptNextAlert = true;
+    }
+  }
+}
